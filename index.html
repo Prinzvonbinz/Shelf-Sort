@@ -1,0 +1,3326 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>SHELF RUSH</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#080b12;
+  --panel:#101722;
+  --panel2:#151e2b;
+  --line:#263346;
+  --text:#f4f7fb;
+  --muted:#91a0b4;
+  --green:#54e28b;
+  --red:#ff5968;
+  --yellow:#ffd35a;
+  --blue:#55a8ff;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  background:
+    radial-gradient(circle at top,#172337 0%,#080b12 48%,#05070b 100%);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+  overflow-x:hidden;
+}
+
+button{
+  font:inherit;
+}
+
+.app{
+  width:100%;
+  max-width:1500px;
+  margin:auto;
+  padding:14px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.logo{
+  font-size:clamp(22px,4vw,38px);
+  font-weight:1000;
+  letter-spacing:2px;
+  text-shadow:0 0 25px rgba(85,168,255,.3);
+}
+
+.logo span{
+  color:var(--yellow);
+}
+
+.money{
+  background:linear-gradient(135deg,#172334,#101721);
+  border:1px solid #33445b;
+  border-radius:14px;
+  padding:10px 16px;
+  font-size:20px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.money::first-letter{
+  color:var(--green);
+}
+
+/* =========================
+   SCREENS
+========================= */
+
+.screen{
+  display:none;
+}
+
+.screen.active{
+  display:block;
+}
+
+/* =========================
+   HOME
+========================= */
+
+.home-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:14px;
+}
+
+.card{
+  background:linear-gradient(145deg,rgba(20,30,43,.96),rgba(11,16,24,.96));
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 12px 40px rgba(0,0,0,.22);
+}
+
+.card-title{
+  font-size:21px;
+  font-weight:900;
+  margin-bottom:13px;
+}
+
+.big-start{
+  width:100%;
+  min-height:70px;
+  border:0;
+  border-radius:17px;
+  background:linear-gradient(135deg,#54e28b,#31b96c);
+  color:#06110a;
+  font-size:25px;
+  font-weight:1000;
+  cursor:pointer;
+  box-shadow:0 8px 30px rgba(84,226,139,.18);
+  transition:.15s;
+}
+
+.big-start:active{
+  transform:scale(.97);
+}
+
+.home-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:10px;
+}
+
+.secondary-btn{
+  min-height:48px;
+  border:1px solid #344359;
+  border-radius:12px;
+  background:#172131;
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.secondary-btn:hover{
+  background:#1d2a3d;
+}
+
+.danger-btn{
+  border-color:#71313b;
+  color:#ff8791;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.stat{
+  background:#0d141f;
+  border:1px solid #202d3e;
+  border-radius:13px;
+  padding:12px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.stat-value{
+  font-size:22px;
+  font-weight:900;
+}
+
+/* =========================
+   UPGRADES
+========================= */
+
+.upgrades{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.upgrade{
+  border:1px solid #27364a;
+  background:#0d141f;
+  border-radius:14px;
+  padding:13px;
+}
+
+.upgrade-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.upgrade-icon{
+  font-size:26px;
+}
+
+.upgrade-name{
+  font-weight:900;
+}
+
+.upgrade-desc{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  margin-top:7px;
+  min-height:32px;
+}
+
+.upgrade-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:7px;
+  margin-top:10px;
+}
+
+.level{
+  font-size:12px;
+  color:#b9c6d6;
+}
+
+.buy{
+  border:0;
+  border-radius:9px;
+  padding:8px 10px;
+  background:#24364e;
+  color:white;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.buy:disabled{
+  opacity:.35;
+  cursor:not-allowed;
+}
+
+.buy:not(:disabled):active{
+  transform:scale(.95);
+}
+
+/* =========================
+   GAME TOP
+========================= */
+
+.game-top{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:10px;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.run-stat{
+  background:#101925;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:10px;
+}
+
+.run-stat-label{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.run-stat-value{
+  font-size:19px;
+  font-weight:1000;
+  margin-top:3px;
+}
+
+.timer{
+  min-width:115px;
+  text-align:center;
+  background:#131d2b;
+  border:2px solid #34455c;
+  border-radius:15px;
+  padding:9px 14px;
+}
+
+.timer-label{
+  font-size:10px;
+  color:var(--muted);
+}
+
+.timer-value{
+  font-size:27px;
+  font-weight:1000;
+}
+
+.timer.warning{
+  border-color:var(--yellow);
+  color:var(--yellow);
+}
+
+.timer.danger{
+  border-color:var(--red);
+  color:var(--red);
+  animation:pulse .7s infinite alternate;
+}
+
+@keyframes pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.03)}
+}
+
+.quit-btn{
+  justify-self:end;
+  border:1px solid #6a3038;
+  color:#ff8590;
+  background:#24151a;
+  border-radius:11px;
+  padding:9px 12px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+/* =========================
+   GAME AREA
+========================= */
+
+.game-panel{
+  display:grid;
+  grid-template-columns:minmax(280px,.75fr) minmax(500px,1.35fr);
+  gap:9px;
+  align-items:start;
+}
+
+.products-panel,
+.shelves-panel{
+  min-width:0;
+}
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:7px;
+  font-weight:1000;
+  font-size:15px;
+}
+
+.section-title small{
+  color:var(--muted);
+  font-size:10px;
+}
+
+/* =========================
+   PRODUCTS
+========================= */
+
+.products{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:7px;
+}
+
+.product{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  padding:9px;
+  background:linear-gradient(145deg,#182231,#101722);
+  border:1px solid #304057;
+  border-radius:12px;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+  transition:.12s;
+}
+
+.product:hover{
+  border-color:#5c779b;
+  transform:translateY(-1px);
+}
+
+.product.dragging{
+  opacity:.55;
+  transform:scale(.96);
+}
+
+.product-icon{
+  width:38px;
+  height:38px;
+  flex:0 0 38px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:#0b111a;
+  font-size:23px;
+}
+
+.product-info{
+  min-width:0;
+}
+
+.product-name{
+  font-size:12px;
+  font-weight:900;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.product-group{
+  color:var(--muted);
+  font-size:9px;
+  margin-top:2px;
+}
+
+.product-value{
+  margin-left:auto;
+  color:var(--green);
+  font-size:11px;
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+/* =========================
+   SHELVES
+========================= */
+
+.shelves{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+
+.shelf{
+  position:relative;
+  min-height:100px;
+  border:2px solid var(--group-color,#44546a);
+  border-radius:15px;
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb,var(--group-color,#44546a) 13%,#101722),
+      #0b1119
+    );
+  padding:8px;
+  transition:.12s;
+  overflow:hidden;
+}
+
+.shelf.over{
+  transform:scale(1.025);
+  box-shadow:
+    0 0 0 2px var(--group-color),
+    0 0 28px color-mix(in srgb,var(--group-color) 35%,transparent);
+}
+
+.shelf-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:5px;
+  margin-bottom:7px;
+}
+
+.shelf-name{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:11px;
+  font-weight:1000;
+}
+
+.shelf-count{
+  color:#c5d0de;
+  font-size:10px;
+  font-weight:900;
+}
+
+.shelf-slots{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:3px;
+}
+
+.slot{
+  aspect-ratio:1;
+  min-width:0;
+  border-radius:4px;
+  background:#070b11;
+  border:1px solid #1e2938;
+  display:grid;
+  place-items:center;
+  font-size:13px;
+}
+
+.slot.filled{
+  background:color-mix(
+    in srgb,
+    var(--group-color) 17%,
+    #101722
+  );
+  border-color:var(--group-color);
+}
+
+.shelf-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:6px;
+  color:#8c9bad;
+  font-size:8px;
+}
+
+.auto-badge{
+  padding:3px 5px;
+  border-radius:5px;
+  background:#26364d;
+  color:#8dc5ff;
+  font-size:8px;
+  font-weight:1000;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+#toastContainer{
+  position:fixed;
+  left:50%;
+  bottom:20px;
+  transform:translateX(-50%);
+  z-index:1000;
+  pointer-events:none;
+}
+
+.toast{
+  background:#101722;
+  border:1px solid #33455c;
+  padding:10px 15px;
+  border-radius:11px;
+  margin-top:7px;
+  font-weight:900;
+  box-shadow:0 8px 30px rgba(0,0,0,.4);
+  animation:toastIn .18s ease-out;
+}
+
+@keyframes toastIn{
+  from{
+    opacity:0;
+    transform:translateY(10px) scale(.95);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+/* =========================
+   PARTICLES
+========================= */
+
+.particle{
+  position:fixed;
+  z-index:999;
+  pointer-events:none;
+  font-size:20px;
+  font-weight:1000;
+  animation:particleFly .75s ease-out forwards;
+}
+
+@keyframes particleFly{
+  0%{
+    opacity:1;
+    transform:translate(-50%,-50%) scale(1);
+  }
+  100%{
+    opacity:0;
+    transform:translate(-50%,-110px) scale(1.35);
+  }
+}
+
+/* =========================
+   RESULT
+========================= */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:900;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  background:rgba(3,5,9,.82);
+  backdrop-filter:blur(7px);
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.result{
+  width:min(520px,100%);
+  background:linear-gradient(145deg,#172231,#0d141e);
+  border:1px solid #3b4e67;
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 25px 70px rgba(0,0,0,.5);
+}
+
+.result-title{
+  text-align:center;
+  font-size:31px;
+  font-weight:1000;
+}
+
+.result-subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin-top:5px;
+}
+
+.result-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin:18px 0;
+}
+
+.result-stat{
+  background:#0b1119;
+  border:1px solid #202d3d;
+  border-radius:12px;
+  padding:12px;
+}
+
+.result-stat span{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.result-stat strong{
+  display:block;
+  font-size:22px;
+  margin-top:4px;
+}
+
+.result-buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.result-buttons button{
+  min-height:48px;
+  border:0;
+  border-radius:11px;
+  font-weight:1000;
+  cursor:pointer;
+}
+
+.again{
+  background:var(--green);
+  color:#06110a;
+}
+
+.home{
+  background:#26364b;
+  color:white;
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media(min-width:851px){
+
+  .products{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .product{
+    min-height:62px;
+  }
+
+  .shelves{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+/* =========================
+   MOBILE
+   IMPORTANT:
+   LEFT = PRODUCTS
+   RIGHT = SHELVES
+========================= */
+
+@media(max-width:850px){
+
+  .app{
+    padding:7px;
+  }
+
+  .header{
+    margin-bottom:7px;
+  }
+
+  .logo{
+    font-size:22px;
+  }
+
+  .money{
+    font-size:15px;
+    padding:7px 10px;
+  }
+
+  .home-grid{
+    grid-template-columns:1fr;
+  }
+
+  .upgrades{
+    grid-template-columns:1fr;
+  }
+
+  .game-top{
+    grid-template-columns:1fr auto 1fr;
+    gap:4px;
+  }
+
+  .run-stat{
+    padding:7px;
+  }
+
+  .run-stat-value{
+    font-size:15px;
+  }
+
+  .timer{
+    min-width:85px;
+    padding:6px 8px;
+  }
+
+  .timer-value{
+    font-size:21px;
+  }
+
+  .quit-btn{
+    padding:7px 8px;
+    font-size:11px;
+  }
+
+  /*
+    DO NOT STACK:
+    products stay left,
+    shelves stay right.
+  */
+
+  .game-panel{
+    grid-template-columns:38% 62%;
+    gap:4px;
+  }
+
+  .products{
+    grid-template-columns:1fr;
+    gap:5px;
+  }
+
+  .product{
+    padding:6px;
+    gap:5px;
+    border-radius:9px;
+  }
+
+  .product-icon{
+    width:29px;
+    height:29px;
+    flex-basis:29px;
+    font-size:17px;
+  }
+
+  .product-name{
+    font-size:9px;
+  }
+
+  .product-group{
+    font-size:7px;
+  }
+
+  .product-value{
+    font-size:8px;
+  }
+
+  .shelves{
+    grid-template-columns:1fr;
+    gap:5px;
+  }
+
+  .shelf{
+    min-height:77px;
+    padding:5px;
+    border-radius:9px;
+  }
+
+  .shelf-head{
+    margin-bottom:4px;
+  }
+
+  .shelf-name{
+    font-size:9px;
+  }
+
+  .shelf-count{
+    font-size:8px;
+  }
+
+  .shelf-slots{
+    gap:2px;
+  }
+
+  .slot{
+    font-size:10px;
+  }
+
+  .shelf-footer{
+    margin-top:3px;
+    font-size:6px;
+  }
+
+  .auto-badge{
+    font-size:6px;
+    padding:2px 3px;
+  }
+
+  .section-title{
+    font-size:11px;
+    margin-bottom:4px;
+  }
+
+  .section-title small{
+    font-size:7px;
+  }
+}
+
+/* very small phones */
+
+@media(max-width:430px){
+
+  .game-panel{
+    grid-template-columns:34% 66%;
+  }
+
+  .product{
+    padding:5px;
+  }
+
+  .product-icon{
+    width:25px;
+    height:25px;
+    flex-basis:25px;
+    font-size:15px;
+  }
+
+  .product-name{
+    font-size:8px;
+  }
+
+  .product-group{
+    display:none;
+  }
+
+  .product-value{
+    display:none;
+  }
+
+  .shelf{
+    min-height:73px;
+  }
+
+  .slot{
+    font-size:9px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      SHELF <span>RUSH</span>
+    </div>
+
+    <div class="money" id="moneyDisplay">
+      $0
+    </div>
+  </header>
+
+  <!-- =========================
+       HOME
+  ========================= -->
+
+  <section id="homeScreen" class="screen active">
+
+    <div class="home-grid">
+
+      <div class="card">
+
+        <div class="card-title">
+          📦 SHELF RUSH
+        </div>
+
+        <p style="color:var(--muted);line-height:1.5">
+          Sortiere Produkte so schnell wie möglich in die richtigen Regale.
+          Jedes Regal hat immer genau <b>10 Plätze</b>.
+        </p>
+
+        <button class="big-start" onclick="startRun()">
+          ▶ RUN STARTEN
+        </button>
+
+        <div class="home-buttons">
+          <button class="secondary-btn" onclick="showScreen('upgradesScreen')">
+            ⚡ Upgrades
+          </button>
+
+          <button class="secondary-btn" onclick="showScreen('statsScreen')">
+            📊 Statistik
+          </button>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="card-title">
+          📊 Deine Statistik
+        </div>
+
+        <div class="stats">
+
+          <div class="stat">
+            <div class="stat-label">RUNS</div>
+            <div class="stat-value" id="homeRuns">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">SORTIERT</div>
+            <div class="stat-value" id="homeSorted">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">REGAL-BONI</div>
+            <div class="stat-value" id="homeShelves">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-label">BESTER RUN</div>
+            <div class="stat-value" id="homeBest">$0</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+       UPGRADES
+  ========================= -->
+
+  <section id="upgradesScreen" class="screen">
+
+    <div class="card">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:10px;
+        margin-bottom:15px;
+      ">
+
+        <div class="card-title" style="margin:0">
+          ⚡ UPGRADES
+        </div>
+
+        <button class="secondary-btn"
+                style="padding:8px 13px"
+                onclick="showScreen('homeScreen')">
+          ← Zurück
+        </button>
+
+      </div>
+
+      <div class="upgrades" id="upgradesList"></div>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+       STATS
+  ========================= -->
+
+  <section id="statsScreen" class="screen">
+
+    <div class="card">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:10px;
+        margin-bottom:15px;
+      ">
+
+        <div class="card-title" style="margin:0">
+          📊 STATISTIK
+        </div>
+
+        <button class="secondary-btn"
+                style="padding:8px 13px"
+                onclick="showScreen('homeScreen')">
+          ← Zurück
+        </button>
+
+      </div>
+
+      <div class="stats">
+
+        <div class="stat">
+          <div class="stat-label">RUNS</div>
+          <div class="stat-value" id="statRuns">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">ITEMS SORTIERT</div>
+          <div class="stat-value" id="statSorted">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">FALSCH SORTIERT</div>
+          <div class="stat-value" id="statWrong">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">GESAMT VERDIENT</div>
+          <div class="stat-value" id="statEarned">$0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">REGAL-BONI</div>
+          <div class="stat-value" id="statShelves">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">BESTER RUN</div>
+          <div class="stat-value" id="statBest">$0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">MEISTE ITEMS</div>
+          <div class="stat-value" id="statBestProducts">0</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">BESTE GENAUIGKEIT</div>
+          <div class="stat-value" id="statAccuracy">0%</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">SCHNELLSTER CLEAR</div>
+          <div class="stat-value" id="statFastest">–</div>
+        </div>
+
+      </div>
+
+      <button
+        class="secondary-btn danger-btn"
+        style="width:100%;margin-top:15px"
+        onclick="resetAll()">
+        🗑️ RESET ALL
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+       GAME
+  ========================= -->
+
+  <section id="gameScreen" class="screen">
+
+    <div class="game-top">
+
+      <div class="run-stat">
+        <div class="run-stat-label">
+          SORTIERT
+        </div>
+
+        <div class="run-stat-value" id="runSorted">
+          0 / 0
+        </div>
+      </div>
+
+      <div class="timer" id="timerBox">
+
+        <div class="timer-label">
+          ZEIT
+        </div>
+
+        <div class="timer-value" id="timer">
+          60
+        </div>
+
+      </div>
+
+      <button class="quit-btn" onclick="quitRun()">
+        ✕ BEENDEN
+      </button>
+
+    </div>
+
+    <div class="game-panel">
+
+      <!-- LEFT -->
+      <div class="products-panel">
+
+        <div class="section-title">
+          <span>📦 PRODUKTE</span>
+          <small id="productCountLabel">0</small>
+        </div>
+
+        <div class="products" id="products"></div>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div class="shelves-panel">
+
+        <div class="section-title">
+          <span>🗄️ REGALE</span>
+          <small>10 Plätze</small>
+        </div>
+
+        <div class="shelves" id="shelves"></div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<!-- TOASTS -->
+<div id="toastContainer"></div>
+
+<!-- RESULT OVERLAY -->
+<div class="overlay" id="resultOverlay">
+
+  <div class="result">
+
+    <div class="result-title" id="resultTitle">
+      RUN ENDE
+    </div>
+
+    <div class="result-subtitle" id="resultSubtitle">
+      Gute Arbeit!
+    </div>
+
+    <div class="result-grid">
+
+      <div class="result-stat">
+        <span>Sortiert</span>
+        <strong id="resultSorted">0</strong>
+      </div>
+
+      <div class="result-stat">
+        <span>Regale komplett</span>
+        <strong id="resultShelves">0</strong>
+      </div>
+
+      <div class="result-stat">
+        <span>Genauigkeit</span>
+        <strong id="resultAccuracy">0%</strong>
+      </div>
+
+      <div class="result-stat">
+        <span>Verdient</span>
+        <strong id="resultMoney">$0</strong>
+      </div>
+
+    </div>
+
+    <div class="result-buttons">
+
+      <button class="again" onclick="closeResultAndStart()">
+        ↻ NOCHMAL
+      </button>
+
+      <button class="home" onclick="closeResult()">
+        🏠 HOME
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   SHELF RUSH
+   ========================================================= */
+
+/* =========================
+   GROUPS
+========================= */
+
+const GROUPS = {
+
+  fruit:{
+    name:"Obst",
+    icon:"🍎",
+    color:"#ef5d6b"
+  },
+
+  drink:{
+    name:"Getränke",
+    icon:"🥤",
+    color:"#55a8ff"
+  },
+
+  bakery:{
+    name:"Backwaren",
+    icon:"🍞",
+    color:"#e6a84e"
+  },
+
+  snack:{
+    name:"Snacks",
+    icon:"🍫",
+    color:"#bc7b58"
+  },
+
+  dairy:{
+    name:"Milchprodukte",
+    icon:"🥛",
+    color:"#d9e8f6"
+  },
+
+  home:{
+    name:"Haushalt",
+    icon:"🧼",
+    color:"#63d4c0"
+  },
+
+  canned:{
+    name:"Konserven",
+    icon:"🥫",
+    color:"#ef8c4f"
+  },
+
+  pet:{
+    name:"Tierbedarf",
+    icon:"🐶",
+    color:"#aa8bea"
+  },
+
+  tech:{
+    name:"Elektronik",
+    icon:"📱",
+    color:"#65c5ff"
+  },
+
+  toy:{
+    name:"Spielzeug",
+    icon:"🧸",
+    color:"#f06ca6"
+  }
+
+};
+
+
+/* =========================
+   PRODUCTS
+========================= */
+
+const PRODUCTS=[
+
+  {id:"apple",group:"fruit",name:"Apfel",icon:"🍎"},
+  {id:"banana",group:"fruit",name:"Banane",icon:"🍌"},
+  {id:"orange",group:"fruit",name:"Orange",icon:"🍊"},
+  {id:"strawberry",group:"fruit",name:"Erdbeeren",icon:"🍓"},
+
+  {id:"water",group:"drink",name:"Wasser",icon:"💧"},
+  {id:"cola",group:"drink",name:"Cola",icon:"🥤"},
+  {id:"juice",group:"drink",name:"Saft",icon:"🧃"},
+  {id:"icedtea",group:"drink",name:"Eistee",icon:"🧋"},
+
+  {id:"bread",group:"bakery",name:"Brot",icon:"🍞"},
+  {id:"croissant",group:"bakery",name:"Croissant",icon:"🥐"},
+  {id:"pretzel",group:"bakery",name:"Brezel",icon:"🥨"},
+  {id:"cake",group:"bakery",name:"Kuchen",icon:"🍰"},
+
+  {id:"chips",group:"snack",name:"Chips",icon:"🥔"},
+  {id:"chocolate",group:"snack",name:"Schokolade",icon:"🍫"},
+  {id:"popcorn",group:"snack",name:"Popcorn",icon:"🍿"},
+  {id:"cookie",group:"snack",name:"Keks",icon:"🍪"},
+
+  {id:"cheese",group:"dairy",name:"Käse",icon:"🧀"},
+  {id:"yogurt",group:"dairy",name:"Joghurt",icon:"🥛"},
+  {id:"butter",group:"dairy",name:"Butter",icon:"🧈"},
+  {id:"cream",group:"dairy",name:"Sahne",icon:"🥛"},
+
+  {id:"soap",group:"home",name:"Seife",icon:"🧼"},
+  {id:"sponge",group:"home",name:"Schwamm",icon:"🧽"},
+  {id:"detergent",group:"home",name:"Waschmittel",icon:"🧴"},
+  {id:"paper",group:"home",name:"Küchenrolle",icon:"🧻"},
+
+  {id:"beans",group:"canned",name:"Bohnen",icon:"🥫"},
+  {id:"corn",group:"canned",name:"Mais",icon:"🌽"},
+  {id:"tomato",group:"canned",name:"Tomaten",icon:"🥫"},
+  {id:"soup",group:"canned",name:"Suppe",icon:"🥫"},
+
+  {id:"dogfood",group:"pet",name:"Hundefutter",icon:"🐶"},
+  {id:"catfood",group:"pet",name:"Katzenfutter",icon:"🐱"},
+  {id:"petball",group:"pet",name:"Tierball",icon:"🐾"},
+  {id:"treat",group:"pet",name:"Leckerli",icon:"🦴"},
+
+  {id:"phone",group:"tech",name:"Smartphone",icon:"📱"},
+  {id:"headphones",group:"tech",name:"Kopfhörer",icon:"🎧"},
+  {id:"mouse",group:"tech",name:"Maus",icon:"🖱️"},
+  {id:"keyboard",group:"tech",name:"Tastatur",icon:"⌨️"},
+
+  {id:"ball",group:"toy",name:"Ball",icon:"⚽"},
+  {id:"teddy",group:"toy",name:"Teddybär",icon:"🧸"},
+  {id:"car",group:"toy",name:"Spielzeugauto",icon:"🚗"},
+  {id:"blocks",group:"toy",name:"Bausteine",icon:"🧱"}
+
+];
+
+
+/* =========================
+   DEFAULT SAVE
+========================= */
+
+const DEFAULT_SAVE={
+
+  money:0,
+
+  totalRuns:0,
+  totalSorted:0,
+  totalWrong:0,
+  totalEarned:0,
+  totalShelves:0,
+
+  bestScore:0,
+  bestProducts:0,
+  bestAccuracy:0,
+  fastestClear:null,
+
+  upgrades:{
+    time:0,
+    value:0,
+    spawn:0,
+    unlock:0,
+    autoSort:0
+  }
+
+};
+
+const SAVE_KEY="shelf_rush_save_v5";
+
+
+/* =========================
+   UPGRADE DATA
+========================= */
+
+const UPGRADE_INFO={
+
+  time:{
+    name:"Extra Zeit",
+    desc:"+5 Sekunden pro Run.",
+    icon:"⏱️",
+    max:8
+  },
+
+  value:{
+    name:"Item-Wert",
+    desc:"Jedes richtig sortierte Item bringt $1 mehr.",
+    icon:"💰",
+    max:8
+  },
+
+  spawn:{
+    name:"Spawn-Geschwindigkeit",
+    desc:"5s → 4s → 3s → 2s → 1s.",
+    icon:"⚡",
+    max:4
+  },
+
+  unlock:{
+    name:"Neue Abteilungen",
+    desc:"Schaltet weitere Produktkategorien frei.",
+    icon:"🔓",
+    max:6
+  },
+
+  autoSort:{
+    name:"Auto-Sort",
+    desc:"Bestimmte Kategorien werden automatisch sortiert.",
+    icon:"🤖",
+    max:4
+  }
+
+};
+
+const UPGRADE_BASE_COST={
+
+  time:75,
+  value:100,
+  spawn:175,
+  unlock:400,
+  autoSort:500
+
+};
+
+
+/* =========================
+   STATE
+========================= */
+
+let saveData=loadSave();
+
+let run=null;
+
+let timerInterval=null;
+let spawnInterval=null;
+
+let productQueue=[];
+
+let drag=null;
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+
+function cloneDefault(){
+  return JSON.parse(JSON.stringify(DEFAULT_SAVE));
+}
+
+
+function loadSave(){
+
+  const base=cloneDefault();
+
+  try{
+
+    const old=JSON.parse(
+      localStorage.getItem(SAVE_KEY)
+    );
+
+    if(!old){
+      return base;
+    }
+
+    base.money=Number(old.money)||0;
+
+    base.totalRuns=Number(old.totalRuns)||0;
+    base.totalSorted=Number(old.totalSorted)||0;
+    base.totalWrong=Number(old.totalWrong)||0;
+    base.totalEarned=Number(old.totalEarned)||0;
+    base.totalShelves=Number(old.totalShelves)||0;
+
+    base.bestScore=Number(old.bestScore)||0;
+    base.bestProducts=Number(old.bestProducts)||0;
+    base.bestAccuracy=Number(old.bestAccuracy)||0;
+
+    base.fastestClear=
+      old.fastestClear===null||
+      old.fastestClear===undefined
+        ? null
+        : Number(old.fastestClear);
+
+    if(old.upgrades){
+
+      for(const key of Object.keys(base.upgrades)){
+
+        const value=Number(old.upgrades[key]);
+
+        if(Number.isFinite(value)){
+          base.upgrades[key]=value;
+        }
+
+      }
+
+    }
+
+  }catch(e){
+
+    console.warn("Save konnte nicht geladen werden.",e);
+
+  }
+
+  return base;
+}
+
+
+function save(){
+
+  localStorage.setItem(
+    SAVE_KEY,
+    JSON.stringify(saveData)
+  );
+
+  updateMoney();
+}
+
+
+function updateMoney(){
+
+  $("moneyDisplay").textContent=
+    "$"+Math.floor(saveData.money);
+
+}
+
+
+function shuffle(array){
+
+  for(let i=array.length-1;i>0;i--){
+
+    const j=Math.floor(Math.random()*(i+1));
+
+    [array[i],array[j]]=
+      [array[j],array[i]];
+
+  }
+
+  return array;
+}
+
+
+/* =========================
+   GAME VALUES
+========================= */
+
+function getTime(){
+
+  return 60+
+    saveData.upgrades.time*5;
+
+}
+
+
+function getCapacity(){
+
+  return 10;
+
+}
+
+
+function getGroupCount(){
+
+  return Math.min(
+    10,
+    4+saveData.upgrades.unlock
+  );
+
+}
+
+
+function getProductCount(){
+
+  return getCapacity()*getGroupCount();
+
+}
+
+
+function getItemValue(){
+
+  return 1+
+    saveData.upgrades.value;
+
+}
+
+
+function getSpawnTime(){
+
+  return Math.max(
+    1,
+    5-saveData.upgrades.spawn
+  );
+
+}
+
+
+function getShelfReward(){
+
+  return 10+
+    run.completedShelves*5;
+
+}
+
+
+function getUpgradeCost(type){
+
+  const level=
+    saveData.upgrades[type];
+
+  return Math.floor(
+    UPGRADE_BASE_COST[type]*
+    Math.pow(1.7,level)
+  );
+
+}
+
+
+function getActiveGroups(){
+
+  return Object.keys(GROUPS)
+    .slice(0,getGroupCount());
+
+}
+
+
+/* =========================
+   SCREEN
+========================= */
+
+function showScreen(id){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(screen=>{
+      screen.classList.remove("active");
+    });
+
+  $(id).classList.add("active");
+
+  if(id==="homeScreen"){
+    updateHome();
+  }
+
+  if(id==="upgradesScreen"){
+    renderUpgrades();
+  }
+
+  if(id==="statsScreen"){
+    updateStats();
+  }
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function updateHome(){
+
+  updateMoney();
+
+  $("homeRuns").textContent=
+    saveData.totalRuns;
+
+  $("homeSorted").textContent=
+    saveData.totalSorted;
+
+  $("homeShelves").textContent=
+    saveData.totalShelves;
+
+  $("homeBest").textContent=
+    "$"+saveData.bestScore;
+
+}
+
+
+/* =========================
+   UPGRADES
+========================= */
+
+function renderUpgrades(){
+
+  const container=
+    $("upgradesList");
+
+  container.innerHTML="";
+
+  for(const type of Object.keys(UPGRADE_INFO)){
+
+    const info=
+      UPGRADE_INFO[type];
+
+    const level=
+      saveData.upgrades[type];
+
+    const max=
+      info.max;
+
+    const maxed=
+      level>=max;
+
+    const cost=
+      getUpgradeCost(type);
+
+    const card=
+      document.createElement("div");
+
+    card.className="upgrade";
+
+    card.innerHTML=`
+
+      <div class="upgrade-head">
+
+        <div class="upgrade-icon">
+          ${info.icon}
+        </div>
+
+        <div class="upgrade-name">
+          ${info.name}
+        </div>
+
+      </div>
+
+      <div class="upgrade-desc">
+        ${info.desc}
+      </div>
+
+      <div class="upgrade-bottom">
+
+        <div class="level">
+          Level ${level} / ${max}
+        </div>
+
+        <button
+          class="buy"
+          ${maxed||saveData.money<cost?"disabled":""}
+          onclick="buyUpgrade('${type}')">
+
+          ${
+            maxed
+              ? "MAX"
+              : "$"+cost
+          }
+
+        </button>
+
+      </div>
+
+    `;
+
+    container.appendChild(card);
+
+  }
+
+}
+
+
+function buyUpgrade(type){
+
+  const info=
+    UPGRADE_INFO[type];
+
+  const level=
+    saveData.upgrades[type];
+
+  if(level>=info.max){
+    return;
+  }
+
+  const cost=
+    getUpgradeCost(type);
+
+  if(saveData.money<cost){
+
+    showToast(
+      "Nicht genug Geld.",
+      "#ff5968"
+    );
+
+    return;
+
+  }
+
+  saveData.money-=cost;
+
+  saveData.upgrades[type]++;
+
+  save();
+
+  renderUpgrades();
+
+  showToast(
+    info.name+" verbessert!",
+    "#54e28b"
+  );
+
+}
+
+
+/* =========================
+   AUTO SORT
+========================= */
+
+function chooseAutoSortGroups(){
+
+  const groups=[
+    ...getActiveGroups()
+  ];
+
+  const amount=Math.min(
+    saveData.upgrades.autoSort,
+    groups.length
+  );
+
+  shuffle(groups);
+
+  return new Set(
+    groups.slice(0,amount)
+  );
+
+}
+
+
+/* =========================
+   RUN GENERATION
+========================= */
+
+function generateRun(){
+
+  const groups=
+    getActiveGroups();
+
+  productQueue=[];
+
+  let uid=0;
+
+  groups.forEach(group=>{
+
+    const variants=
+      PRODUCTS.filter(
+        p=>p.group===group
+      );
+
+    /*
+      Jedes aktive Regal bekommt
+      exakt 10 Produkte.
+    */
+
+    for(let i=0;i<10;i++){
+
+      const product=
+        variants[
+          Math.floor(
+            Math.random()*variants.length
+          )
+        ];
+
+      productQueue.push({
+
+        uid:
+          uid+++
+          "_"+
+          Math.random()
+            .toString(36)
+            .slice(2),
+
+        productId:
+          product.id,
+
+        group,
+
+        placed:false
+
+      });
+
+    }
+
+  });
+
+  shuffle(productQueue);
+
+  run={
+
+    startedAt:performance.now(),
+
+    timeLeft:getTime(),
+
+    products:[],
+
+    allProducts:
+      productQueue.slice(),
+
+    correct:0,
+
+    wrong:0,
+
+    money:0,
+
+    completedShelves:0,
+
+    completeGroups:new Set(),
+
+    autoSortGroups:
+      chooseAutoSortGroups(),
+
+    active:true,
+
+    clearTime:null
+
+  };
+
+}
+
+
+/* =========================
+   START RUN
+========================= */
+
+function startRun(){
+
+  clearInterval(timerInterval);
+  clearInterval(spawnInterval);
+
+  timerInterval=null;
+  spawnInterval=null;
+
+  $("resultOverlay")
+    .classList.remove("show");
+
+  generateRun();
+
+  showScreen("gameScreen");
+
+  renderShelves();
+
+  renderProducts();
+
+  updateRunUI();
+
+  /*
+    Auto-Sort Kategorien werden
+    direkt abgearbeitet.
+  */
+
+  processAutoSort();
+
+  /*
+    Erstes normales Produkt sofort.
+  */
+
+  spawnProduct();
+
+  /*
+    Danach entsprechend Upgrade:
+    5 / 4 / 3 / 2 / 1 Sekunden.
+  */
+
+  spawnInterval=setInterval(
+    spawnProduct,
+    getSpawnTime()*1000
+  );
+
+  /*
+    Timer läuft einmal pro Sekunde.
+  */
+
+  timerInterval=setInterval(()=>{
+
+    if(!run||!run.active){
+      return;
+    }
+
+    run.timeLeft--;
+
+    updateRunUI();
+
+    if(run.timeLeft<=0){
+
+      endRun(false);
+
+    }
+
+  },1000);
+
+}
+
+
+function processAutoSort(){
+
+  if(!run) return;
+
+  const autoGroups=
+    run.autoSortGroups;
+
+  if(!autoGroups||
+     autoGroups.size===0){
+    return;
+  }
+
+  const autoProducts=
+    run.allProducts.filter(
+      p=>autoGroups.has(p.group)
+    );
+
+  autoProducts.forEach(product=>{
+
+    if(product.placed){
+      return;
+    }
+
+    product.placed=true;
+
+    run.correct++;
+
+    run.money+=getItemValue();
+
+  });
+
+  /*
+    Auto-Sort kann komplette Regale erzeugen.
+  */
+
+  for(const group of autoGroups){
+
+    const groupProducts=
+      run.allProducts.filter(
+        p=>p.group===group
+      );
+
+    if(
+      groupProducts.length===10 &&
+      groupProducts.every(
+        p=>p.placed
+      )
+    ){
+
+      if(!run.completeGroups.has(group)){
+
+        run.completeGroups.add(group);
+
+        const reward=
+          getShelfReward();
+
+        run.money+=reward;
+
+        run.completedShelves++;
+
+        showToast(
+          "🤖 AUTO-SORT: "+
+          GROUPS[group].name+
+          " komplett! +$"+reward,
+          "#ffd35a"
+        );
+
+      }
+
+    }
+
+  }
+
+  productQueue=
+    productQueue.filter(
+      p=>!p.placed
+    );
+
+  updateRunUI();
+  renderProducts();
+  renderShelves();
+
+}
+
+
+/* =========================
+   SPAWN
+========================= */
+
+function spawnProduct(){
+
+  if(!run||!run.active){
+    return;
+  }
+
+  /*
+    Erst Auto-Sort prüfen.
+  */
+
+  processAutoSort();
+
+  /*
+    Nächstes nicht platziertes Produkt.
+  */
+
+  const index=
+    productQueue.findIndex(
+      p=>!p.placed
+    );
+
+  if(index===-1){
+
+    checkRunFinished();
+
+    return;
+
+  }
+
+  const product=
+    productQueue.splice(index,1)[0];
+
+  run.products.push(product);
+
+  renderProducts();
+
+  updateRunUI();
+
+}
+
+
+/* =========================
+   RENDER PRODUCTS
+========================= */
+
+function renderProducts(){
+
+  const container=
+    $("products");
+
+  container.innerHTML="";
+
+  if(!run){
+    return;
+  }
+
+  const visible=
+    run.products.filter(
+      p=>!p.placed
+    );
+
+  $("productCountLabel").textContent=
+    visible.length+" offen";
+
+  visible.forEach(product=>{
+
+    const data=
+      PRODUCTS.find(
+        p=>p.id===product.productId
+      );
+
+    if(!data){
+      return;
+    }
+
+    const group=
+      GROUPS[product.group];
+
+    const element=
+      document.createElement("div");
+
+    element.className="product";
+
+    element.dataset.uid=
+      product.uid;
+
+    element.innerHTML=`
+
+      <div
+        class="product-icon"
+        style="border:1px solid ${group.color}">
+        ${data.icon}
+      </div>
+
+      <div class="product-info">
+
+        <div class="product-name">
+          ${data.name}
+        </div>
+
+        <div class="product-group">
+          ${group.icon} ${group.name}
+        </div>
+
+      </div>
+
+      <div class="product-value">
+        +$${getItemValue()}
+      </div>
+
+    `;
+
+    setupProductDrag(
+      element,
+      product
+    );
+
+    container.appendChild(element);
+
+  });
+
+}
+
+
+/* =========================
+   TOUCH / MOUSE DRAG
+========================= */
+
+function setupProductDrag(
+  element,
+  product
+){
+
+  /*
+    Desktop
+  */
+
+  element.draggable=true;
+
+  element.addEventListener(
+    "dragstart",
+    e=>{
+
+      drag={
+        uid:product.uid
+      };
+
+      element.classList.add(
+        "dragging"
+      );
+
+      e.dataTransfer.effectAllowed=
+        "move";
+
+      e.dataTransfer.setData(
+        "text/plain",
+        product.uid
+      );
+
+    }
+  );
+
+  element.addEventListener(
+    "dragend",
+    ()=>{
+
+      element.classList.remove(
+        "dragging"
+      );
+
+      drag=null;
+
+      document
+        .querySelectorAll(".shelf.over")
+        .forEach(s=>
+          s.classList.remove("over")
+        );
+
+    }
+  );
+
+
+  /*
+    Mobile / Pointer
+  */
+
+  element.addEventListener(
+    "pointerdown",
+    e=>{
+
+      if(e.pointerType==="mouse"){
+        return;
+      }
+
+      drag={
+        uid:product.uid
+      };
+
+      element.classList.add(
+        "dragging"
+      );
+
+      try{
+        element.setPointerCapture(
+          e.pointerId
+        );
+      }catch(err){}
+
+    }
+  );
+
+
+  element.addEventListener(
+    "pointermove",
+    e=>{
+
+      if(
+        e.pointerType==="mouse"||
+        !drag||
+        drag.uid!==product.uid
+      ){
+        return;
+      }
+
+      const target=
+        document.elementFromPoint(
+          e.clientX,
+          e.clientY
+        );
+
+      document
+        .querySelectorAll(".shelf.over")
+        .forEach(s=>
+          s.classList.remove("over")
+        );
+
+      const shelf=
+        target?.closest(".shelf");
+
+      if(shelf){
+        shelf.classList.add("over");
+      }
+
+    }
+  );
+
+
+  element.addEventListener(
+    "pointerup",
+    e=>{
+
+      if(e.pointerType==="mouse"){
+        return;
+      }
+
+      const target=
+        document.elementFromPoint(
+          e.clientX,
+          e.clientY
+        );
+
+      const shelf=
+        target?.closest(".shelf");
+
+      if(shelf){
+
+        dropProduct(
+          shelf,
+          e.clientX,
+          e.clientY
+        );
+
+      }
+
+      drag=null;
+
+      element.classList.remove(
+        "dragging"
+      );
+
+      document
+        .querySelectorAll(".shelf.over")
+        .forEach(s=>
+          s.classList.remove("over")
+        );
+
+    }
+  );
+
+}
+
+
+/* =========================
+   SHELVES
+========================= */
+
+function renderShelves(){
+
+  const container=
+    $("shelves");
+
+  container.innerHTML="";
+
+  if(!run){
+    return;
+  }
+
+  getActiveGroups()
+    .forEach(group=>{
+
+      const info=
+        GROUPS[group];
+
+      const groupProducts=
+        run.allProducts.filter(
+          p=>p.group===group
+        );
+
+      const placed=
+        groupProducts.filter(
+          p=>p.placed
+        );
+
+      const count=
+        placed.length;
+
+      const shelf=
+        document.createElement("div");
+
+      shelf.className="shelf";
+
+      shelf.dataset.group=
+        group;
+
+      shelf.style.setProperty(
+        "--group-color",
+        info.color
+      );
+
+      shelf.innerHTML=`
+
+        <div class="shelf-head">
+
+          <div class="shelf-name">
+
+            <span>
+              ${info.icon}
+            </span>
+
+            <span>
+              ${info.name}
+            </span>
+
+          </div>
+
+          <div class="shelf-count">
+            ${count}/10
+          </div>
+
+        </div>
+
+        <div class="shelf-slots">
+
+          ${Array.from(
+            {length:10},
+            (_,i)=>{
+
+              const item=
+                placed[i];
+
+              if(!item){
+
+                return `
+                  <div class="slot"></div>
+                `;
+
+              }
+
+              const data=
+                PRODUCTS.find(
+                  p=>p.id===item.productId
+                );
+
+              return `
+                <div class="slot filled">
+                  ${data?.icon||"📦"}
+                </div>
+              `;
+
+            }
+          ).join("")}
+
+        </div>
+
+        <div class="shelf-footer">
+
+          <span>
+            ${
+              count===10
+                ? "✓ KOMPLETT"
+                : "Noch "+(10-count)
+            }
+          </span>
+
+          ${
+            run.autoSortGroups.has(group)
+              ? `<span class="auto-badge">🤖 AUTO</span>`
+              : ""
+          }
+
+        </div>
+
+      `;
+
+
+      /*
+        Desktop dragover/drop
+      */
+
+      shelf.addEventListener(
+        "dragover",
+        e=>{
+
+          e.preventDefault();
+
+          shelf.classList.add("over");
+
+        }
+      );
+
+
+      shelf.addEventListener(
+        "dragleave",
+        ()=>{
+          shelf.classList.remove("over");
+        }
+      );
+
+
+      shelf.addEventListener(
+        "drop",
+        e=>{
+
+          e.preventDefault();
+
+          const uid=
+            e.dataTransfer.getData(
+              "text/plain"
+            );
+
+          drag={
+            uid
+          };
+
+          dropProduct(
+            shelf,
+            e.clientX,
+            e.clientY
+          );
+
+          drag=null;
+
+        }
+      );
+
+
+      container.appendChild(shelf);
+
+    });
+
+}
+
+
+/* =========================
+   DROP PRODUCT
+========================= */
+
+function dropProduct(
+  shelf,
+  x,
+  y
+){
+
+  if(
+    !run||
+    !run.active||
+    !drag
+  ){
+    return;
+  }
+
+  const product=
+    run.products.find(
+      p=>p.uid===drag.uid
+    );
+
+  document
+    .querySelectorAll(".shelf.over")
+    .forEach(s=>
+      s.classList.remove("over")
+    );
+
+  if(!product){
+    return;
+  }
+
+
+  /*
+    FALSCHES REGAL
+  */
+
+  if(
+    product.group!==
+    shelf.dataset.group
+  ){
+
+    run.wrong++;
+
+    sound("wrong");
+
+    showToast(
+      "✕ Falsches Regal",
+      "#ff5968"
+    );
+
+    updateRunUI();
+
+    return;
+
+  }
+
+
+  /*
+    RICHTIG
+  */
+
+  product.placed=true;
+
+  run.correct++;
+
+  const itemValue=
+    getItemValue();
+
+  let earned=
+    itemValue;
+
+
+  /*
+    Prüfen, ob das Regal
+    jetzt genau 10 Items enthält.
+  */
+
+  const before=
+    run.allProducts.filter(
+      p=>
+        p.group===product.group &&
+        p.placed
+    ).length;
+
+
+  if(before===getCapacity()){
+
+    const reward=
+      getShelfReward();
+
+    earned+=reward;
+
+    run.completedShelves++;
+
+    run.completeGroups.add(
+      product.group
+    );
+
+    sound("complete");
+
+    showToast(
+      "REGAL KOMPLETT! +$"+
+      reward+
+      " Bonus",
+      "#ffd35a"
+    );
+
+  }else{
+
+    sound("correct");
+
+    showToast(
+      "+$"+itemValue,
+      "#54e28b"
+    );
+
+  }
+
+
+  run.money+=earned;
+
+
+  particles(
+    x,
+    y,
+    earned>itemValue
+      ? "💰"
+      : "$"
+  );
+
+
+  /*
+    Produkt aus der sichtbaren Liste entfernen.
+  */
+
+  run.products=
+    run.products.filter(
+      p=>p.uid!==product.uid
+    );
+
+
+  /*
+    Produkt eventuell auch aus Queue
+    entfernen, falls vorhanden.
+  */
+
+  productQueue=
+    productQueue.filter(
+      p=>p.uid!==product.uid
+    );
+
+
+  renderProducts();
+  renderShelves();
+  updateRunUI();
+
+  checkRunFinished();
+
+}
+
+
+/* =========================
+   CHECK FINISHED
+========================= */
+
+function checkRunFinished(){
+
+  if(!run||!run.active){
+    return;
+  }
+
+  const allPlaced=
+    run.allProducts.every(
+      p=>p.placed
+    );
+
+  const noVisible=
+    run.products.length===0;
+
+  const noQueue=
+    productQueue.length===0;
+
+  if(
+    allPlaced&&
+    noVisible&&
+    noQueue
+  ){
+
+    run.clearTime=
+      getTime()-run.timeLeft;
+
+    setTimeout(
+      ()=>endRun(true),
+      150
+    );
+
+  }
+
+}
+
+
+/* =========================
+   RUN UI
+========================= */
+
+function updateRunUI(){
+
+  if(!run){
+    return;
+  }
+
+  $("runSorted").textContent=
+    run.correct+
+    " / "+
+    run.allProducts.length;
+
+  $("timer").textContent=
+    Math.max(
+      0,
+      run.timeLeft
+    );
+
+  const timerBox=
+    $("timerBox");
+
+  timerBox.classList.remove(
+    "warning",
+    "danger"
+  );
+
+  if(run.timeLeft<=10){
+
+    timerBox.classList.add(
+      "danger"
+    );
+
+  }else if(run.timeLeft<=20){
+
+    timerBox.classList.add(
+      "warning"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   END RUN
+========================= */
+
+function endRun(completed){
+
+  if(!run||!run.active){
+    return;
+  }
+
+  run.active=false;
+
+  clearInterval(timerInterval);
+  clearInterval(spawnInterval);
+
+  timerInterval=null;
+  spawnInterval=null;
+
+
+  /*
+    Geld speichern.
+  */
+
+  saveData.money+=
+    run.money;
+
+  saveData.totalEarned+=
+    run.money;
+
+  saveData.totalRuns++;
+
+  saveData.totalSorted+=
+    run.correct;
+
+  saveData.totalWrong+=
+    run.wrong;
+
+  saveData.totalShelves+=
+    run.completedShelves;
+
+
+  /*
+    Beste Run-Belohnung.
+  */
+
+  if(run.money>saveData.bestScore){
+
+    saveData.bestScore=
+      run.money;
+
+  }
+
+
+  if(run.correct>
+     saveData.bestProducts){
+
+    saveData.bestProducts=
+      run.correct;
+
+  }
+
+
+  const totalAttempts=
+    run.correct+
+    run.wrong;
+
+  const accuracy=
+    totalAttempts>0
+      ? run.correct/totalAttempts*100
+      : 0;
+
+
+  if(
+    accuracy>
+    saveData.bestAccuracy
+  ){
+
+    saveData.bestAccuracy=
+      accuracy;
+
+  }
+
+
+  if(
+    completed&&
+    run.clearTime!==null
+  ){
+
+    if(
+      saveData.fastestClear===null||
+      run.clearTime<
+      saveData.fastestClear
+    ){
+
+      saveData.fastestClear=
+        run.clearTime;
+
+    }
+
+  }
+
+
+  save();
+
+
+  /*
+    Ergebnis anzeigen.
+  */
+
+  showResult(completed);
+
+}
+
+
+/* =========================
+   RESULT
+========================= */
+
+function showResult(completed){
+
+  const totalAttempts=
+    run.correct+
+    run.wrong;
+
+  const accuracy=
+    totalAttempts>0
+      ? run.correct/totalAttempts*100
+      : 0;
+
+
+  $("resultTitle").textContent=
+    completed
+      ? "🏆 RUN GESCHAFFT!"
+      : "⏱️ ZEIT VORBEI";
+
+
+  $("resultSubtitle").textContent=
+    completed
+      ? "Alle Produkte wurden sortiert."
+      : "Einige Produkte sind übrig geblieben.";
+
+
+  $("resultSorted").textContent=
+    run.correct+
+    " / "+
+    run.allProducts.length;
+
+
+  $("resultShelves").textContent=
+    run.completedShelves;
+
+
+  $("resultAccuracy").textContent=
+    accuracy.toFixed(1)+"%";
+
+
+  $("resultMoney").textContent=
+    "$"+run.money;
+
+
+  $("resultOverlay")
+    .classList.add("show");
+
+}
+
+
+function closeResult(){
+
+  $("resultOverlay")
+    .classList.remove("show");
+
+  run=null;
+
+  productQueue=[];
+
+  drag=null;
+
+  showScreen("homeScreen");
+
+}
+
+
+function closeResultAndStart(){
+
+  $("resultOverlay")
+    .classList.remove("show");
+
+  run=null;
+
+  productQueue=[];
+
+  drag=null;
+
+  startRun();
+
+}
+
+
+/* =========================
+   QUIT
+========================= */
+
+function quitRun(){
+
+  if(!run||!run.active){
+    return;
+  }
+
+  const yes=
+    confirm(
+      "Run wirklich beenden?\n\n"+
+      "Das bisher verdiente Geld wird trotzdem gutgeschrieben."
+    );
+
+  if(!yes){
+    return;
+  }
+
+  endRun(false);
+
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+function updateStats(){
+
+  $("statRuns").textContent=
+    saveData.totalRuns;
+
+  $("statSorted").textContent=
+    saveData.totalSorted;
+
+  $("statWrong").textContent=
+    saveData.totalWrong;
+
+  $("statEarned").textContent=
+    "$"+saveData.totalEarned;
+
+  $("statShelves").textContent=
+    saveData.totalShelves;
+
+  $("statBest").textContent=
+    "$"+saveData.bestScore;
+
+  $("statBestProducts").textContent=
+    saveData.bestProducts;
+
+  $("statAccuracy").textContent=
+    saveData.bestAccuracy.toFixed(1)+"%";
+
+  $("statFastest").textContent=
+    saveData.fastestClear===null
+      ? "–"
+      : saveData.fastestClear.toFixed(1)+"s";
+
+}
+
+
+/* =========================
+   RESET ALL
+========================= */
+
+function resetAll(){
+
+  if(!confirm(
+    "Wirklich ALLES zurücksetzen?\n\n"+
+    "Geld, Upgrades und Statistiken werden gelöscht."
+  )){
+    return;
+  }
+
+  clearInterval(timerInterval);
+  clearInterval(spawnInterval);
+
+  timerInterval=null;
+  spawnInterval=null;
+
+  run=null;
+
+  productQueue=[];
+
+  drag=null;
+
+  saveData=
+    cloneDefault();
+
+  localStorage.removeItem(
+    SAVE_KEY
+  );
+
+  save();
+
+  $("resultOverlay")
+    .classList.remove("show");
+
+  updateHome();
+
+  renderUpgrades();
+
+  updateMoney();
+
+  showScreen("homeScreen");
+
+  showToast(
+    "Alles zurückgesetzt.",
+    "#54e28b"
+  );
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+function showToast(
+  message,
+  color="#fff"
+){
+
+  const container=
+    $("toastContainer");
+
+  const toast=
+    document.createElement("div");
+
+  toast.className="toast";
+
+  toast.style.color=
+    color;
+
+  toast.textContent=
+    message;
+
+  container.appendChild(toast);
+
+  setTimeout(
+    ()=>{
+      toast.remove();
+    },
+    1300
+  );
+
+}
+
+
+/* =========================
+   PARTICLES
+========================= */
+
+function particles(
+  x,
+  y,
+  text
+){
+
+  const particle=
+    document.createElement("div");
+
+  particle.className=
+    "particle";
+
+  particle.textContent=
+    text;
+
+  particle.style.left=
+    x+"px";
+
+  particle.style.top=
+    y+"px";
+
+  document.body.appendChild(
+    particle
+  );
+
+  setTimeout(
+    ()=>{
+      particle.remove();
+    },
+    800
+  );
+
+}
+
+
+/* =========================
+   SIMPLE SOUND
+========================= */
+
+let audioContext=null;
+
+
+function sound(type){
+
+  try{
+
+    if(!audioContext){
+
+      audioContext=
+        new (
+          window.AudioContext||
+          window.webkitAudioContext
+        )();
+
+    }
+
+    const osc=
+      audioContext.createOscillator();
+
+    const gain=
+      audioContext.createGain();
+
+    osc.connect(gain);
+
+    gain.connect(
+      audioContext.destination
+    );
+
+
+    if(type==="correct"){
+
+      osc.frequency.value=620;
+      gain.gain.value=.035;
+
+    }
+
+
+    if(type==="wrong"){
+
+      osc.frequency.value=150;
+      gain.gain.value=.035;
+
+    }
+
+
+    if(type==="complete"){
+
+      osc.frequency.value=900;
+      gain.gain.value=.045;
+
+    }
+
+
+    osc.start();
+
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audioContext.currentTime+.12
+    );
+
+    osc.stop(
+      audioContext.currentTime+.12
+    );
+
+  }catch(e){
+
+    /*
+      Audio ist optional.
+      Falls der Browser Audio blockiert,
+      funktioniert das Spiel trotzdem.
+    */
+
+  }
+
+}
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+updateMoney();
+
+updateHome();
+
+renderUpgrades();
+
+updateStats();
+
+</script>
+
+</body>
+    </html>
